@@ -110,10 +110,23 @@ namespace Diga.Core.Threading
 
         public void Signal(DispatcherPriority priority)
         {
-            User32.PostMessage(this._hWnd, WM_DISPATCH_WORK_ITEM, new IntPtr(SignalW), new IntPtr(SignalL));
+           User32.PostMessage(this._hWnd, WM_DISPATCH_WORK_ITEM, new IntPtr(SignalW), new IntPtr(SignalL));
         }
 
+        public void DoEvents()
+        {
+                while (User32.PeekMessage(out MSG msg, IntPtr.Zero, 0, 0, 0))
+                {
+                    ApiBool b = User32.GetMessage(out msg, IntPtr.Zero, 0, 0);
+                    if(b == false)
+                        continue;
+                    User32.TranslateMessage(ref msg);
+                    User32.DispatchMessage(ref msg);
+                    
+                }
+                
 
+        }
 
         public bool CurrentThreadIsLoopThread => _uiThread == Thread.CurrentThread;
         

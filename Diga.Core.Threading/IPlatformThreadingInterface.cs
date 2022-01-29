@@ -21,5 +21,7 @@ namespace Diga.Core.Threading
         bool CurrentThreadIsLoopThread { get; }
 
         event Action<DispatcherPriority?> Signaled;
+
+        void DoEvents();
     }
 }

@@ -47,6 +47,38 @@ namespace Diga.Core.Threading
         /// <param name="priority">The priority with which to invoke the method.</param>
         /// <returns>A task that can be used to track the method's execution.</returns>
         Task<TResult> InvokeAsync<TResult>(Func<TResult> function, DispatcherPriority priority = DispatcherPriority.Normal);
+        /// <summary>
+        /// Invoke Task sync
+        /// </summary>
+        /// <typeparam name="TResult">Result</typeparam>
+        /// <param name="task">Taks</param>
+        /// <returns>Result</returns>
+        TResult Invoke<TResult>(Task<TResult> task);
+        /// <summary>
+        /// Invoke Function on UIThread Sync
+        /// </summary>
+        /// <typeparam name="TResult">Result</typeparam>
+        /// <param name="function">Function</param>
+        /// <returns>Result</returns>
+        TResult Invoke<TResult>(Func<TResult> function);
+
+        /// <summary>
+        /// Invoke Function on UIThread Sync
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="function"></param>
+        /// <returns></returns>
+        TResult Invoke<TResult>(Func<Task<TResult>> function);
+        /// <summary>
+        /// Execute Task Sync
+        /// </summary>
+        /// <param name="task">Task to execute</param>
+        void Invoke(Task task);
+        /// <summary>
+        /// Invoke Action on UIThread Sync
+        /// </summary>
+        /// <param name="action">Action to execute</param>
+        void Invoke(Action action);
 
         /// <summary>
         /// Queues the specified work to run on the dispatcher thread and returns a proxy for the

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Diga.Core.Threading
@@ -111,7 +114,45 @@ namespace Diga.Core.Threading
             _ = function ?? throw new ArgumentNullException(nameof(function));
             return this._jobRunner.InvokeAsync(function, priority).Unwrap();
         }
+        /// <inheritdoc/>
+        public TResult Invoke<TResult>(Task<TResult> task)
+        {
+            TaskAwaiter<TResult> awaiter = task.GetAwaiter();
+            while (!awaiter.IsCompleted)
+            {
+                Thread.Sleep(10);
+                this._platform.DoEvents();
+            }
 
+            return awaiter.GetResult();
+        }
+        /// <inheritdoc/>
+        public TResult Invoke<TResult>(Func<TResult> function)
+        {
+            return Invoke(InvokeAsync(function));
+        }
+        /// <inheritdoc/>
+        public TResult Invoke<TResult>(Func<Task<TResult>> function)
+        {
+            return Invoke(InvokeAsync(function));
+        }
+        /// <inheritdoc/>
+        public void Invoke(Task task)
+        {
+            TaskAwaiter awaiter = task.GetAwaiter();
+            while (!awaiter.IsCompleted)
+            {
+                Thread.Sleep(10);
+                this._platform.DoEvents();
+            }
+        }
+        /// <inheritdoc/>
+        public void Invoke(Action action)
+        {
+            Invoke(InvokeAsync(action));
+        }
+
+        
         /// <inheritdoc/>
         public void Post(Action action, DispatcherPriority priority = DispatcherPriority.Normal)
         {

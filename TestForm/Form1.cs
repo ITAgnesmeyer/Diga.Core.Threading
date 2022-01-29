@@ -52,5 +52,32 @@ namespace TestForm
                 this.listBox1.Items.Add($"hwnd:{wnd.Key.ToInt64()}, Class:{wnd.Value}");
             }
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string result =  UIDispatcher.UIThread.Invoke<string>(  async () =>
+                {
+                    for (int i = 0; i < 10; i++)
+                    {
+                        await Task.Delay(100);
+                        await SetLable("Value:" + i);
+                    }
+
+                    throw new Exception("Dies ist eine gewollte Exception!");
+                    return "hallo";
+                });
+
+
+                MessageBox.Show("Bearbeitung fertig:" + result);
+
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Exception:" + exception.Message);
+            }
+
+        }
     }
 }
