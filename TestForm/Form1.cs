@@ -65,7 +65,7 @@ namespace TestForm
                         await SetLable("Value:" + i);
                     }
 
-                    throw new Exception("Dies ist eine gewollte Exception!");
+                    //throw new Exception("Dies ist eine gewollte Exception!");
                     return "hallo";
                 });
 

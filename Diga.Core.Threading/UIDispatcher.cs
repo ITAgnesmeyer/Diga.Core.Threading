@@ -142,7 +142,7 @@ namespace Diga.Core.Threading
             TaskAwaiter awaiter = task.GetAwaiter();
             while (!awaiter.IsCompleted)
             {
-                Thread.Sleep(10);
+                //Thread.Sleep(10);
                 this._platform.DoEvents();
             }
         }
