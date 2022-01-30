@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net4.7.2;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
     <RootNamespace>Diga.Core.Threading</RootNamespace>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Authors>Dipl.-Ing.(FH) Guido Agnesmeyer</Authors>
     <Product>Diga.Core.Threading</Product>
     <Copyright>Copyright © 2022 Dipl.-Ing.(FH) Guido Agnesmeyer</Copyright>
@@ -12,12 +12,16 @@
     <AssemblyOriginatorKeyFile>diga.core.threading.snk</AssemblyOriginatorKeyFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageId>Diga.Core.Threading</PackageId>
-    <PackageTags>Threading</PackageTags>
+    <PackageTags>Threading;Windows</PackageTags>
     <PackageIcon>logo.png</PackageIcon>
   </PropertyGroup>
   <PropertyGroup>
     <DisableImplicitNamespaceImports>true</DisableImplicitNamespaceImports>
     <SignAssembly>True</SignAssembly>
+    <PackageProjectUrl>https://github.com/ITAgnesmeyer/Diga.Core.Threading</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/ITAgnesmeyer/Diga.Core.Threading</RepositoryUrl>
+    <Description>Async Calls in UI-Thread.</Description>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Diga.Core.Api.Win32" Version="2.0.4" />
