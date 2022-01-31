@@ -53,7 +53,7 @@ namespace TestForm
             }
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void TestSync()
         {
             try
             {
@@ -62,9 +62,34 @@ namespace TestForm
                     for (int i = 0; i < 10; i++)
                     {
                         await Task.Delay(100);
-                        await SetLable("Value:" + i);
+                        await SetLable("Value Inner:" + i);
                     }
 
+                    //throw new Exception("Dies ist eine gewollte Exception!");
+                    return "hallo";
+                });
+
+                MessageBox.Show(result);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Error:" + e.Message);
+            }
+        }
+        private void button3_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string result =  UIDispatcher.UIThread.Invoke<string>(  async () =>
+                {
+                    TestSync();
+                    for (int i = 0; i < 10; i++)
+                    {
+                        await Task.Delay(100);
+                        await SetLable("Value:" + i);
+                        TestSync();
+                    }
+                    
                     //throw new Exception("Dies ist eine gewollte Exception!");
                     return "hallo";
                 });

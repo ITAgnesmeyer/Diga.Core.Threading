@@ -115,15 +115,11 @@ namespace Diga.Core.Threading
 
         public void DoEvents()
         {
-                while (User32.PeekMessage(out MSG msg, IntPtr.Zero, 0, 0, 0))
-                {
-                    ApiBool b = User32.GetMessage(out msg, IntPtr.Zero, 0, 0);
-                    if(b == false)
-                        continue;
-                    User32.TranslateMessage(ref msg);
-                    User32.DispatchMessage(ref msg);
-                    
-                }
+            while (User32.PeekMessage(out MSG msg, IntPtr.Zero, 0, 0, 0x0001 | 0x0002))
+            {
+                User32.TranslateMessage(ref msg);
+                User32.DispatchMessage(ref msg);
+            }
                 
 
         }
