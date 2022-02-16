@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using Diga.Core.Api.Win32;
@@ -78,20 +80,28 @@ namespace Diga.Core.Threading
 
             return User32.DefWindowProc(hWnd, msg, wParam, lParam);
         }
-
+        [HandleProcessCorruptedStateExceptions]
         public void RunLoop(CancellationToken cancellationToken)
         {
-            var result = 0;
-            while (!cancellationToken.IsCancellationRequested &&
-                   (result = User32.GetMessage(out var msg, IntPtr.Zero, 0, 0)) > 0)
+            try
             {
-                User32.TranslateMessage(ref msg);
-                User32.DispatchMessage(ref msg);
-            }
+                var result = 0;
+                while (!cancellationToken.IsCancellationRequested &&
+                       (result = User32.GetMessage(out var msg, IntPtr.Zero, 0, 0)) > 0)
+                {
+                    User32.TranslateMessage(ref msg);
+                    User32.DispatchMessage(ref msg);
+                }
 
-            if (result < 0)
+                if (result < 0)
+                {
+                    //?
+                }
+
+            }
+            catch (Exception e)
             {
-                //?
+                Debug.Print("Error:" + e.Message);
             }
 
         }
@@ -113,18 +123,39 @@ namespace Diga.Core.Threading
            User32.PostMessage(this._hWnd, WM_DISPATCH_WORK_ITEM, new IntPtr(SignalW), new IntPtr(SignalL));
         }
 
+        [HandleProcessCorruptedStateExceptions]
         public void DoEvents()
         {
-            while (User32.PeekMessage(out MSG msg, IntPtr.Zero, 0, 0, 0x0001 | 0x0002))
+            try
             {
-                User32.TranslateMessage(ref msg);
-                User32.DispatchMessage(ref msg);
+                while (User32.PeekMessage(out MSG msg, IntPtr.Zero, 0, 0, 0x0001 | 0x0002))
+                {
+                    User32.TranslateMessage(ref msg);
+                    User32.DispatchMessage(ref msg);
+                }
+
+            }
+            catch (AccessViolationException vex)
+            {
+                Debug.Print("AccessViolationException=>" + vex.StackTrace);
+            }
+#pragma warning disable 618
+            catch (ExecutionEngineException e)
+#pragma warning restore 618
+            {
+                Debug.Print("ExecutionEngineException=>" + e.StackTrace);
+            }
+            catch (Exception e)
+            {
+                Debug.Print("DoEvents Exception:" + e.Message);
             }
                 
 
         }
 
-        public bool CurrentThreadIsLoopThread => _uiThread == Thread.CurrentThread;
+        public bool InvokeRequired =>
+            User32.GetWindowThreadProcessId(this._hWnd, out _) != Kernel32.GetCurrentThreadId();
+        public bool CurrentThreadIsLoopThread => this.InvokeRequired;
         
 
         public event Action<DispatcherPriority?> Signaled;

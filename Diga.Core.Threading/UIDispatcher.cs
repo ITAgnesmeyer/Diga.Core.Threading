@@ -117,12 +117,16 @@ namespace Diga.Core.Threading
         /// <inheritdoc/>
         public TResult Invoke<TResult>(Task<TResult> task)
         {
+            
             TaskAwaiter<TResult> awaiter = task.GetAwaiter();
+
             while (!awaiter.IsCompleted)
             {
                 //Thread.Sleep(10);
                 this._platform.DoEvents();
             }
+
+
 
             return awaiter.GetResult();
         }
