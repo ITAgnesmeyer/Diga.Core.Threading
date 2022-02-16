@@ -18,6 +18,7 @@ namespace Diga.Core.Threading
 
         void Signal(DispatcherPriority priority);
 
+        bool InvokeRequired { get; }
         bool CurrentThreadIsLoopThread { get; }
 
         event Action<DispatcherPriority?> Signaled;

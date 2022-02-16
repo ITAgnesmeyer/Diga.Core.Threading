@@ -155,7 +155,7 @@ namespace Diga.Core.Threading
 
         public bool InvokeRequired =>
             User32.GetWindowThreadProcessId(this._hWnd, out _) != Kernel32.GetCurrentThreadId();
-        public bool CurrentThreadIsLoopThread => this.InvokeRequired;
+        public bool CurrentThreadIsLoopThread => _uiThread == Thread.CurrentThread;
         
 
         public event Action<DispatcherPriority?> Signaled;

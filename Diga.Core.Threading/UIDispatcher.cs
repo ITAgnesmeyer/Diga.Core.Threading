@@ -47,6 +47,8 @@ namespace Diga.Core.Threading
         /// </summary>
         public bool CheckAccess() => this._platform?.CurrentThreadIsLoopThread ?? true;
 
+        public bool InvokeRequired => this._platform.InvokeRequired;
+
         /// <summary>
         /// Checks that the current thread is the UI thread and throws if not.
         /// </summary>
