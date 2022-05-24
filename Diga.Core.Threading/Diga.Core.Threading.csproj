@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net4.7.2;netcoreapp3.1;net5.0;net6.0</TargetFrameworks>
     <RootNamespace>Diga.Core.Threading</RootNamespace>
-    <Version>1.0.5</Version>
+    <Version>1.0.6</Version>
     <Authors>Dipl.-Ing.(FH) Guido Agnesmeyer</Authors>
     <Product>Diga.Core.Threading</Product>
     <Copyright>Copyright © 2022 Dipl.-Ing.(FH) Guido Agnesmeyer</Copyright>
@@ -24,7 +24,7 @@
     <Description>Async Calls in UI-Thread.</Description>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Diga.Core.Api.Win32" Version="2.0.4" />
+    <PackageReference Include="Diga.Core.Api.Win32" Version="2.0.5" />
   </ItemGroup>
   <ItemGroup>
     <None Include="logo.png" Pack="true" PackagePath="\" />

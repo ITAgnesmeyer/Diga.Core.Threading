@@ -104,5 +104,11 @@ namespace TestForm
             }
 
         }
+
+        private async void button4_Click(object sender, EventArgs e)
+        {
+            await Diga.Core.Threading.UIDispatcher.UIThread.WaitAsyn( 5000);
+            MessageBox.Show("hallo Welt");
+        }
     }
 }

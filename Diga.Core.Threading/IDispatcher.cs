@@ -97,5 +97,23 @@ namespace Diga.Core.Threading
         /// <param name="priority">The priority with which to invoke the method.</param>
         /// <returns>A task that represents a proxy for the task returned by <paramref name="function"/>.</returns>
         Task<TResult> InvokeAsync<TResult>(Func<Task<TResult>> function, DispatcherPriority priority = DispatcherPriority.Normal);
+
+        /// <summary>
+        /// Call DoEvents on UI-Thread
+        /// </summary>
+        void DoEvents();
+
+        /// <summary>
+        /// Wait without blocking UI-Thread
+        /// </summary>
+        /// <param name="milliSeconds">Milliseconds to wait</param>
+        void Wait(int milliSeconds);
+
+        /// <summary>
+        /// Wait Async. Internally calls DoEvent
+        /// </summary>
+        /// <param name="milliSeconds">Milliseconds to wait</param>
+        /// <returns>Task</returns>
+        Task WaitAsyn(int milliSeconds);
     }
 }

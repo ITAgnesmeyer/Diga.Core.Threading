@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
+using System.Security;
 using System.Threading;
 using Diga.Core.Api.Win32;
 namespace Diga.Core.Threading
@@ -80,6 +81,8 @@ namespace Diga.Core.Threading
 
             return User32.DefWindowProc(hWnd, msg, wParam, lParam);
         }
+
+        [SecurityCritical]
         [HandleProcessCorruptedStateExceptions]
         public void RunLoop(CancellationToken cancellationToken)
         {
@@ -122,7 +125,7 @@ namespace Diga.Core.Threading
         {
            User32.PostMessage(this._hWnd, WM_DISPATCH_WORK_ITEM, new IntPtr(SignalW), new IntPtr(SignalL));
         }
-
+        [SecurityCritical]
         [HandleProcessCorruptedStateExceptions]
         public void DoEvents()
         {

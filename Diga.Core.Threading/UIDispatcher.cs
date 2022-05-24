@@ -1,7 +1,5 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Diga.Core.Threading
@@ -11,7 +9,7 @@ namespace Diga.Core.Threading
         private readonly JobRunner _jobRunner;
         private IPlatformThreadingInterface _platform;
 
-        public static UIDispatcher UIThread { get; } 
+        public static UIDispatcher UIThread { get; }
 
 
         private bool disposedValue;
@@ -30,16 +28,13 @@ namespace Diga.Core.Threading
 
         private UIDispatcher(IPlatformThreadingInterface platform)
         {
-            
             this._platform = platform;
             this._jobRunner = new JobRunner(platform);
-            
+
             if (this._platform != null)
             {
                 this._platform.Signaled += this._jobRunner.RunJobs;
             }
-
-           
         }
 
         /// <summary>
@@ -80,7 +75,6 @@ namespace Diga.Core.Threading
         public void RunJobs()
         {
             this._jobRunner.RunJobs(null);
-            
         }
 
         /// <summary>
@@ -95,9 +89,10 @@ namespace Diga.Core.Threading
             _ = action ?? throw new ArgumentNullException(nameof(action));
             return this._jobRunner.InvokeAsync(action, priority);
         }
-        
+
         /// <inheritdoc/>
-        public Task<TResult> InvokeAsync<TResult>(Func<TResult> function, DispatcherPriority priority = DispatcherPriority.Normal)
+        public Task<TResult> InvokeAsync<TResult>(Func<TResult> function,
+            DispatcherPriority priority = DispatcherPriority.Normal)
         {
             _ = function ?? throw new ArgumentNullException(nameof(function));
             return this._jobRunner.InvokeAsync(function, priority);
@@ -111,15 +106,54 @@ namespace Diga.Core.Threading
         }
 
         /// <inheritdoc/>
-        public Task<TResult> InvokeAsync<TResult>(Func<Task<TResult>> function, DispatcherPriority priority = DispatcherPriority.Normal)
+        public Task<TResult> InvokeAsync<TResult>(Func<Task<TResult>> function,
+            DispatcherPriority priority = DispatcherPriority.Normal)
         {
             _ = function ?? throw new ArgumentNullException(nameof(function));
             return this._jobRunner.InvokeAsync(function, priority).Unwrap();
         }
         /// <inheritdoc/>
+        public void DoEvents()
+        {
+            this._platform?.DoEvents();
+        }
+        /// <inheritdoc/>
+        public void Wait(int milliSeconds)
+        {
+            var start = Environment.TickCount;
+
+            while (true)
+            {
+                DoEvents();
+                var diff = Environment.TickCount - start;
+                if (diff > milliSeconds)
+                {
+                    break;
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        public Task WaitAsyn(int milliSeconds)
+        {
+            return  Task.Run(() =>
+            {
+                var start = Environment.TickCount;
+
+                while (true)
+                {
+                    DoEvents();
+                    var diff = Environment.TickCount - start;
+                    if (diff > milliSeconds)
+                    {
+                        break;
+                    }
+                }
+            });
+        }
+        /// <inheritdoc/>
         public TResult Invoke<TResult>(Task<TResult> task)
         {
-            
             TaskAwaiter<TResult> awaiter = task.GetAwaiter();
 
             while (!awaiter.IsCompleted)
@@ -129,19 +163,21 @@ namespace Diga.Core.Threading
             }
 
 
-
             return awaiter.GetResult();
         }
+
         /// <inheritdoc/>
         public TResult Invoke<TResult>(Func<TResult> function)
         {
             return Invoke(InvokeAsync(function));
         }
+
         /// <inheritdoc/>
         public TResult Invoke<TResult>(Func<Task<TResult>> function)
         {
             return Invoke(InvokeAsync(function));
         }
+
         /// <inheritdoc/>
         public void Invoke(Task task)
         {
@@ -152,13 +188,14 @@ namespace Diga.Core.Threading
                 this._platform.DoEvents();
             }
         }
+
         /// <inheritdoc/>
         public void Invoke(Action action)
         {
             Invoke(InvokeAsync(action));
         }
 
-        
+
         /// <inheritdoc/>
         public void Post(Action action, DispatcherPriority priority = DispatcherPriority.Normal)
         {
@@ -214,7 +251,7 @@ namespace Diga.Core.Threading
             }
         }
 
-   
+
         public void Dispose()
         {
             Dispose(disposing: true);
