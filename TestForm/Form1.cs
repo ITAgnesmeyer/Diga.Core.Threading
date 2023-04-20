@@ -107,7 +107,7 @@ namespace TestForm
 
         private async void button4_Click(object sender, EventArgs e)
         {
-            await Diga.Core.Threading.UIDispatcher.UIThread.WaitAsyn( 5000);
+            await Diga.Core.Threading.UIDispatcher.UIThread.WaitAsyn( 15000);
             MessageBox.Show("hallo Welt");
         }
     }

@@ -28,6 +28,7 @@ namespace Diga.Core.Threading
             try
             {
                 var result = this._function();
+                
                 this._taskCompletionSource.SetResult(result);
             }
             catch (Exception e)

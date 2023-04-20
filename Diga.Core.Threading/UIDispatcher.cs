@@ -10,7 +10,7 @@ namespace Diga.Core.Threading
         private IPlatformThreadingInterface _platform;
 
         public static UIDispatcher UIThread { get; }
-
+        public static volatile bool FilnalDisposed = false;
 
         private bool disposedValue;
 
@@ -124,6 +124,10 @@ namespace Diga.Core.Threading
 
             while (true)
             {
+                if (FilnalDisposed)
+                {
+                    break;
+                }
                 DoEvents();
                 var diff = Environment.TickCount - start;
                 if (diff > milliSeconds)
@@ -136,12 +140,16 @@ namespace Diga.Core.Threading
         /// <inheritdoc/>
         public Task WaitAsyn(int milliSeconds)
         {
-            return  Task.Run(() =>
+            return Task.Run(() =>
             {
                 var start = Environment.TickCount;
 
                 while (true)
                 {
+                    if (FilnalDisposed)
+                    {
+                        break;
+                    }
                     DoEvents();
                     var diff = Environment.TickCount - start;
                     if (diff > milliSeconds)
@@ -158,6 +166,12 @@ namespace Diga.Core.Threading
 
             while (!awaiter.IsCompleted)
             {
+                if (FilnalDisposed)
+                {
+                    task.Dispose();
+                    throw new ObjectDisposedException(nameof(UIDispatcher));
+                }
+                    
                 //Thread.Sleep(10);
                 this._platform.DoEvents();
             }
@@ -184,6 +198,13 @@ namespace Diga.Core.Threading
             TaskAwaiter awaiter = task.GetAwaiter();
             while (!awaiter.IsCompleted)
             {
+                if (FilnalDisposed)
+                {
+                    task.Dispose();
+                    throw new ObjectDisposedException(nameof(UIDispatcher));
+                }
+                    
+
                 //Thread.Sleep(10);
                 this._platform.DoEvents();
             }
@@ -246,6 +267,7 @@ namespace Diga.Core.Threading
         {
             if (!disposedValue)
             {
+                FilnalDisposed = true;
                 this._platform?.Dispose();
                 disposedValue = true;
             }

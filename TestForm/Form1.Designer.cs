@@ -18,6 +18,7 @@ namespace TestForm
             {
                 components.Dispose();
             }
+            Diga.Core.Threading.UIDispatcher.UIThread.Dispose();
             base.Dispose(disposing);
         }
 
