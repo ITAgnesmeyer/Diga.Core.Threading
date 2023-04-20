@@ -17,7 +17,7 @@ namespace Diga.Core.Threading
         static UIDispatcher()
         {
             UIThread = new UIDispatcher(WinPlatform.Instance);
-            AppDomain.CurrentDomain.ProcessExit += AppDomainProcessExit;
+            //AppDomain.CurrentDomain.ProcessExit += AppDomainProcessExit;
         }
 
         private static void AppDomainProcessExit(object sender, EventArgs e)
@@ -276,8 +276,12 @@ namespace Diga.Core.Threading
 
         public void Dispose()
         {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
+            if (!FilnalDisposed)
+            {
+
+                Dispose(disposing: true);
+                GC.SuppressFinalize(this);
+            }
         }
     }
 }

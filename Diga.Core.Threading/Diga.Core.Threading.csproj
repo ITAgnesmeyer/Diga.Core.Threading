@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net4.7.2;netcoreapp3.1;net6.0;net7.0</TargetFrameworks>
     <RootNamespace>Diga.Core.Threading</RootNamespace>
-    <Version>1.0.7</Version>
+    <Version>1.0.8</Version>
     <Authors>Dipl.-Ing.(FH) Guido Agnesmeyer</Authors>
     <Product>Diga.Core.Threading</Product>
     <Copyright>Copyright © 2022 Dipl.-Ing.(FH) Guido Agnesmeyer</Copyright>
