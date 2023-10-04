@@ -103,6 +103,15 @@ namespace Diga.Core.Threading
                 _platform?.Signal(job.Priority);
         }
 
+        public void JobsClear()
+        {
+            int len = this._queues.Length;
+            for (int i = 0; i < len; i++)
+            {
+                this._queues[i].Clear();
+                
+            }
+        }
         private IJob GetNextJob(DispatcherPriority minimumPriority)
         {
             for (int c = (int)DispatcherPriority.MaxValue; c >= (int)minimumPriority; c--)

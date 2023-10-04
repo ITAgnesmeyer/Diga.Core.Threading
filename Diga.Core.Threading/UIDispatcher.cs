@@ -4,6 +4,13 @@ using System.Threading.Tasks;
 
 namespace Diga.Core.Threading
 {
+    public class UIDispatcherFinalDisposeException : Exception
+    {
+        public UIDispatcherFinalDisposeException(string message):base(message)
+        {
+            
+        }
+    }
     public class UIDispatcher : IDispatcher
     {
         private readonly JobRunner _jobRunner;
@@ -168,8 +175,18 @@ namespace Diga.Core.Threading
             {
                 if (FilnalDisposed)
                 {
-                    task.Dispose();
-                    throw new ObjectDisposedException(nameof(UIDispatcher));
+
+                    try
+                    {
+                        this._jobRunner.JobsClear();
+                        task.Dispose();
+                    }
+                    catch (Exception)
+                    {
+                        throw new UIDispatcherFinalDisposeException("UIDispatcher.Invoke<TResult>: Final Disposed! => You close The application while Task is running!");    
+                    }
+                    
+                    
                 }
                     
                 //Thread.Sleep(10);
@@ -200,8 +217,16 @@ namespace Diga.Core.Threading
             {
                 if (FilnalDisposed)
                 {
-                    task.Dispose();
-                    throw new ObjectDisposedException(nameof(UIDispatcher));
+                    try
+                    {
+                        this._jobRunner.JobsClear();
+                        task.Dispose();
+                    }
+                    catch (Exception)
+                    {
+                        throw new UIDispatcherFinalDisposeException("UIDispatcher.Invoke: Final Disposed! => You close The application while Task is running!");    
+                    }
+
                 }
                     
 
